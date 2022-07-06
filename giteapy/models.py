@@ -56,6 +56,7 @@ class AddTimeOption:
 
     # TODO: Check why star after time
     # TODO: Add better description of what this is for
+    # TODO: created and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
     """
 
     created: str
@@ -88,6 +89,7 @@ class UserModel:
         visibility: The user's visibility. (public, limited, private)
         website: The user's website.
 
+    # TODO: created and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
     """
 
     active: bool

@@ -31,10 +31,16 @@ class Gitea:
         self.logger.debug(f"Disconnected from {self.url}")
         return False
 
-    def get_request(self, path: str, error_404: str = "HTTP 404 Not Found"):
+    def get_request(
+        self,
+        path: str,
+        params=None,
+        error_404: str = "HTTP 404 Not Found",
+    ):
         try:
-            self.logger.debug(f"GET {path}")
-            response: httpx.Response = self.client.get(self.url + path)
+            self.logger.debug(f"GET {path} with params {params}")
+            response: httpx.Response
+            response = self.client.get(url=self.url + path, params=params)
 
             # Raise HTTPStatusError if the response is not 200
             response.raise_for_status()
