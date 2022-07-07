@@ -9,7 +9,7 @@ class User(Gitea):
         """Get the authenticated user."""
         path = "/user"
         request = self.get_request(path)
-        data = request.response_text
+        data = request.data
 
         return UserModel(
             active=data["active"],
@@ -41,7 +41,7 @@ class User(Gitea):
         """
         path = "/user/emails"
         request = self.get_request(path)
-        data = request.response_text
+        data = request.data
 
         for email in data:
             yield EmailListModel(
@@ -64,7 +64,7 @@ class User(Gitea):
         """
         path = "/user/followers"
         request = self.get_request(path=path, params={"page": page, "limit": limit})
-        data = request.response_text
+        data = request.data
 
         for user in data:
             yield UserModel(
@@ -103,7 +103,7 @@ class User(Gitea):
         """
         path = "/user/following"
         request = self.get_request(path, {"page": page, "limit": limit})
-        data = request.response_text
+        data = request.data
 
         for user in data:
             yield UserModel(
@@ -142,19 +142,20 @@ class User(Gitea):
         # If user is not following, the request will return a 404.
         # We need to silence that.
         request = self.get_request(path, silence_404=True)
-        response_text = request.response_text
-        self.logger.debug(f"response_text: {response_text}")
+        data = request.data
+        self.logger.debug(f"response_text: {data}")
 
-        # Response text is empty if the user is following.
-        if response_text:
+        # Request response is empty if user is following.
+        if data:
+            # TODO: Check if we should use data["errors"] instead.
             # If we are not following the user, the response text will be 'The target couldn't be found'.
-            if "The target couldn't be found." in response_text["message"]:
+            if "The target couldn't be found." in data["message"]:
                 return False
             else:
                 # If we get another response text, we should raise an exception.
                 error_msg = (
-                    "Unexpected response_text: \n"
-                    f"Expected 'The target couldn't be found.' but got '{response_text}' instead.\n"
+                    "Unexpected response: \n"
+                    f"Expected 'The target couldn't be found.' but got '{data}' instead.\n"
                     "Please report this issue on https://github.com/TheLovinator1/gitea.py or "
                     "https://git.lovinator.space/TheLovinator/gitea.py"
                 )

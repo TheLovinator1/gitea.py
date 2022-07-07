@@ -25,7 +25,14 @@ class Gitea:
 
     def __enter__(self):
         """This is for the 'with' thingy."""
-        self.client = httpx.Client(headers=self.headers, base_url=self.url)
+        self.client = httpx.Client(
+            headers=self.headers,
+            base_url=self.url,
+            event_hooks={
+                "request": [self.log_request],
+                "response": [self.log_response],
+            },
+        )
         self.logger.debug(f"Connected to {self.url}")
         return self
 
@@ -37,7 +44,18 @@ class Gitea:
     @dataclass
     class RequestModel:
         response: httpx.Response
-        response_text: typing.Any
+        data: typing.Any
+
+    def log_request(self, request):
+        self.logger.debug(
+            f"Request event hook: {request.method} {request.url} - Waiting for response"
+        )
+
+    def log_response(self, response):
+        request = response.request
+        self.logger.debug(
+            f"Response event hook: {request.method} {request.url} - Status {response.status_code}"
+        )
 
     def get_request(
         self,
@@ -56,7 +74,6 @@ class Gitea:
             RequestModel: The HTTP response from Gitea.
         """
         try:
-            self.logger.debug(f"GET {path} with params {params}")
             response: httpx.Response
             response = self.client.get(url=self.url + path, params=params)
             response.raise_for_status()
