@@ -244,3 +244,18 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert hasattr(follow, "website")
         assert type(follow.website) is str
         print(f"follow.website = {follow.website}")
+
+    print("\n\n")
+    if_following_true = User.get_if_following_username(gitea, "LoviBot")
+    print(f"if_following LoviBot = {if_following_true}")
+    if if_following_true:
+        print("We are following LoviBot")
+    else:
+        print("We are not following LoviBot")
+
+    if_following_false = User.get_if_following_username(gitea, "Archive")
+    print(f"if_following_false Archive = {if_following_false}")
+    if if_following_false:
+        print("We are following Archive")
+    else:
+        print("We are not following Archive")

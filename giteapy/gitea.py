@@ -1,6 +1,9 @@
+from dataclasses import dataclass
 import logging
+import typing
 import httpx
 import json
+from httpx._types import QueryParamTypes
 
 
 class Gitea:
@@ -31,35 +34,47 @@ class Gitea:
         self.logger.debug(f"Disconnected from {self.url}")
         return False
 
+    @dataclass
+    class RequestModel:
+        response: httpx.Response
+        response_text: typing.Any
+
     def get_request(
         self,
         path: str,
-        params=None,
-        error_404: str = "HTTP 404 Not Found",
-    ):
+        params: typing.Optional[QueryParamTypes] = None,
+        silence_404: bool = False,
+    ) -> RequestModel:
+        """Do a GET request to the API.
+
+        Args:
+            path: The path to the API endpoint.
+            params (optional): Defaults to None.
+            silence_404 (optional): _description_. Defaults to False.
+
+        Returns:
+            RequestModel: The HTTP response from Gitea.
+        """
         try:
             self.logger.debug(f"GET {path} with params {params}")
             response: httpx.Response
             response = self.client.get(url=self.url + path, params=params)
-
-            # Raise HTTPStatusError if the response is not 200
             response.raise_for_status()
 
         except httpx.RequestError as exc:
-            self.logger.error(
-                f"An error occurred while requesting {exc.request.url!r}.",
-                exc_info=True,
-            )
+            url = exc.request.url
+            self.logger.error(f"An error occurred while requesting {url!r}.")
 
         except httpx.HTTPStatusError as exc:
-            self.logger.error(
-                f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.",
-                exc_info=True,
-            )
-            if exc.response.status_code == 404:
-                self.logger.error(f"{error_404}")
+            # Silence 404 errors when we know they are not relevant
+            if exc.response.status_code == 404 and not silence_404:
+                status_code = exc.response.status_code
+                url = exc.request.url
+                self.logger.error(f"Error {status_code} while requesting {url!r}.")
 
-        return json.loads(response.text)
+        if response.text:
+            return self.RequestModel(response, json.loads(response.text))
+        return self.RequestModel(response, "")
 
     def post_request(
         self,
@@ -93,6 +108,9 @@ class Gitea:
             # 400 Bad Request
             if exc.response.status_code == 400:
                 self.logger.error(f"{error_400}")
+
+            if exc.response.status_code == 401:
+                self.logger.error(f"{response}")
 
             # 403 Forbidden
             if exc.response.status_code == 403:

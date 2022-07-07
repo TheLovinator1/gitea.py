@@ -8,7 +8,8 @@ class User(Gitea):
     def get_user(self) -> UserModel:
         """Get the authenticated user."""
         path = "/user"
-        data = self.get_request(path=path)
+        request = self.get_request(path)
+        data = request.response_text
 
         return UserModel(
             active=data["active"],
@@ -39,7 +40,8 @@ class User(Gitea):
             EmailListModel: The user's email addresses.
         """
         path = "/user/emails"
-        data = self.get_request(path=path)
+        request = self.get_request(path)
+        data = request.response_text
 
         for email in data:
             yield EmailListModel(
@@ -61,7 +63,8 @@ class User(Gitea):
         # TODO: Implement pagination and always get max limit if limit is unspecified.
         """
         path = "/user/followers"
-        data = self.get_request(path=path, params={"page": page, "limit": limit})
+        request = self.get_request(path=path, params={"page": page, "limit": limit})
+        data = request.response_text
 
         for user in data:
             yield UserModel(
@@ -99,7 +102,8 @@ class User(Gitea):
         # TODO: Implement pagination and always get max limit if limit is unspecified.
         """
         path = "/user/following"
-        data = self.get_request(path=path, params={"page": page, "limit": limit})
+        request = self.get_request(path, {"page": page, "limit": limit})
+        data = request.response_text
 
         for user in data:
             yield UserModel(
@@ -123,3 +127,25 @@ class User(Gitea):
                 visibility=user["visibility"],
                 website=user["website"],
             )
+
+    def get_if_following_username(self, username: str) -> bool:
+        """Check if the authenticated user is following the given username.
+
+        Args:
+            username (str): The username of the user to check.
+
+        Returns:
+            bool: True if we are following the user, False otherwise.
+        """
+        path = f"/user/following/{username}"
+
+        # If user is not following, the request will return a 404.
+        # We need to silence that.
+        request = self.get_request(path, silence_404=True)
+        data = request.response_text
+        self.logger.debug(f"data: {data}")
+
+        if data:
+            if "The target couldn't be found." in data["message"]:
+                return False
+        return True
