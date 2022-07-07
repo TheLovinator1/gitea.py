@@ -2,6 +2,7 @@ from giteapy.gitea import Gitea
 
 from giteapy.models import UserModel, EmailListModel
 from typing import Generator
+from giteapy.exceptions import UserNotFound
 
 
 class User(Gitea):
@@ -134,6 +135,9 @@ class User(Gitea):
         Args:
             username (str): The username of the user to check.
 
+        Raises:
+            UserNotFound: The user was not found.
+
         Returns:
             bool: True if we are following the user, False otherwise.
         """
@@ -147,18 +151,24 @@ class User(Gitea):
 
         # Request response is empty if user is following.
         if data:
-            # TODO: Check if we should use data["errors"] instead.
             # If we are not following the user, the response text will be 'The target couldn't be found'.
             if "The target couldn't be found." in data["message"]:
+                # TODO: Check if we should use something else here.
                 return False
+
+            if data["message"].startswith("user redirect does not exist"):
+                raise UserNotFound(username)
+
             else:
                 # If we get another response text, we should raise an exception.
+                # TODO: Add more contact information to the exception.
                 error_msg = (
                     "Unexpected response: \n"
                     f"Expected 'The target couldn't be found.' but got '{data}' instead.\n"
                     "Please report this issue on https://github.com/TheLovinator1/gitea.py or "
-                    "https://git.lovinator.space/TheLovinator/gitea.py"
+                    "https://git.lovinator.space/TheLovinator/gitea.py if this error persists."
                 )
                 self.logger.error(error_msg, exc_info=True)
                 raise Exception(error_msg)
+
         return True

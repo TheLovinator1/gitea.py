@@ -1,6 +1,7 @@
 import pytest
 from giteapy.gitea import Gitea
 from giteapy.user import User
+from giteapy.exceptions import UserNotFound
 
 
 def test_get_user():
@@ -202,3 +203,13 @@ def test_get_following():
 
             assert hasattr(user, "website")
             assert type(user.website) is str
+
+
+def test_if_following():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        if_following_lovibot = User.if_following(gitea, "LoviBot")
+        assert if_following_lovibot is True
+
+        # if_following() throws an exception if the user doesn't exist
+        with pytest.raises(UserNotFound):
+            User.if_following(gitea, "IDontExists")
