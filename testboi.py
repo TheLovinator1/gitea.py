@@ -246,16 +246,7 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         print(f"follow.website = {follow.website}")
 
     print("\n\n")
-    if_following_true = User.get_if_following_username(gitea, "LoviBot")
-    print(f"if_following LoviBot = {if_following_true}")
-    if if_following_true:
-        print("We are following LoviBot")
-    else:
-        print("We are not following LoviBot")
-
-    if_following_false = User.get_if_following_username(gitea, "Archive")
-    print(f"if_following_false Archive = {if_following_false}")
-    if if_following_false:
-        print("We are following Archive")
-    else:
-        print("We are not following Archive")
+    if_following_lovibot = User.if_following(gitea, "LoviBot")
+    print(f"if_following LoviBot = {if_following_lovibot}")
+    if_following_archive = User.if_following(gitea, "Archive")
+    print(f"if_following_false Archive = {if_following_archive}")

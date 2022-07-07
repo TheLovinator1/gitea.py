@@ -90,7 +90,7 @@ class User(Gitea):
             )
 
     def get_following(self, page, limit):
-        """Get the authenticated user's following.
+        """Get a list of users the authenticated user is following.
 
         Args:
             page (int): The page number.
@@ -128,7 +128,7 @@ class User(Gitea):
                 website=user["website"],
             )
 
-    def get_if_following_username(self, username: str) -> bool:
+    def if_following(self, username: str) -> bool:
         """Check if the authenticated user is following the given username.
 
         Args:
@@ -142,10 +142,22 @@ class User(Gitea):
         # If user is not following, the request will return a 404.
         # We need to silence that.
         request = self.get_request(path, silence_404=True)
-        data = request.response_text
-        self.logger.debug(f"data: {data}")
+        response_text = request.response_text
+        self.logger.debug(f"response_text: {response_text}")
 
-        if data:
-            if "The target couldn't be found." in data["message"]:
+        # Response text is empty if the user is following.
+        if response_text:
+            # If we are not following the user, the response text will be 'The target couldn't be found'.
+            if "The target couldn't be found." in response_text["message"]:
                 return False
+            else:
+                # If we get another response text, we should raise an exception.
+                error_msg = (
+                    "Unexpected response_text: \n"
+                    f"Expected 'The target couldn't be found.' but got '{response_text}' instead.\n"
+                    "Please report this issue on https://github.com/TheLovinator1/gitea.py or "
+                    "https://git.lovinator.space/TheLovinator/gitea.py"
+                )
+                self.logger.error(error_msg, exc_info=True)
+                raise Exception(error_msg)
         return True
