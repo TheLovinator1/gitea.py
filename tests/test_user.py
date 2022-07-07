@@ -211,5 +211,5 @@ def test_if_following():
         assert if_following_lovibot is True
 
         # if_following() throws an exception if the user doesn't exist
-        with pytest.raises(UserNotFound):
+        with pytest.raises(UserNotFound, match="User 'IDontExists' not found."):
             User.if_following(gitea, "IDontExists")
