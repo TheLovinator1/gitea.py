@@ -268,3 +268,21 @@ class RepositoryModel:
     updated_at: str  # TODO: Change to datetime
     watchers_count: int
     website: str
+
+
+@dataclass
+class SettingsModel:
+    """User settings
+
+    #TODO: There is a random bold Privacy in the middle of UserSettings in Swagger. Fix this?
+    """
+
+    description: str
+    diff_view_style: str
+    full_name: str
+    hide_activity: bool
+    hide_email: bool
+    language: str
+    location: str
+    theme: str
+    website: str

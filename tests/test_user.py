@@ -328,7 +328,6 @@ def test_get_repos():
 
             assert hasattr(repo, "ssh_url")
             assert type(repo.ssh_url) is str
-            print(f"\trepo.ssh_url = {repo.ssh_url!r}")
 
             assert hasattr(repo, "stars_count")
             assert type(repo.stars_count) is int
@@ -344,3 +343,35 @@ def test_get_repos():
 
             assert hasattr(repo, "website")
             assert type(repo.website) is str
+
+
+def test_get_settings():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        settings = User.get_settings(gitea)
+
+        assert hasattr(settings, "description")
+        assert type(settings.description) is str
+
+        assert hasattr(settings, "diff_view_style")
+        assert type(settings.diff_view_style) is str
+
+        assert hasattr(settings, "full_name")
+        assert type(settings.full_name) is str
+
+        assert hasattr(settings, "hide_activity")
+        assert type(settings.hide_activity) is bool
+
+        assert hasattr(settings, "hide_email")
+        assert type(settings.hide_email) is bool
+
+        assert hasattr(settings, "language")
+        assert type(settings.language) is str
+
+        assert hasattr(settings, "location")
+        assert type(settings.location) is str
+
+        assert hasattr(settings, "theme")
+        assert type(settings.theme) is str
+
+        assert hasattr(settings, "website")
+        assert type(settings.website) is str

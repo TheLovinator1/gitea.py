@@ -1,6 +1,6 @@
 from giteapy.gitea import Gitea
 
-from giteapy.models import UserModel, EmailListModel, RepositoryModel
+from giteapy.models import UserModel, EmailListModel, RepositoryModel, SettingsModel
 from typing import Generator
 from giteapy.exceptions import UserNotFound
 
@@ -239,3 +239,25 @@ class User(Gitea):
                 watchers_count=repo["watchers_count"],
                 website=repo["website"],
             )
+
+    def get_settings(self):
+        """Get the authenticated user's settings.
+
+        Returns:
+            SettingsModel: The user's settings.
+        """
+        path = "/user/settings"
+        request = self.get_request(path)
+        data = request.data
+
+        return SettingsModel(
+            description=data["description"],
+            diff_view_style=data["diff_view_style"],
+            full_name=data["full_name"],
+            hide_activity=data["hide_activity"],
+            hide_email=data["hide_email"],
+            language=data["language"],
+            location=data["location"],
+            theme=data["theme"],
+            website=data["website"],
+        )

@@ -428,3 +428,41 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert hasattr(repo, "website")
         assert type(repo.website) is str
         print(f"\trepo.website = {repo.website!r}")
+
+    print("\nTesting User.get_settings()")
+    settings = User.get_settings(gitea)
+    assert hasattr(settings, "description")
+    assert type(settings.description) is str
+    print(f"\tsettings.description = {settings.description!r}")
+
+    assert hasattr(settings, "diff_view_style")
+    assert type(settings.diff_view_style) is str
+    print(f"\tsettings.diff_view_style = {settings.diff_view_style!r}")
+
+    assert hasattr(settings, "full_name")
+    assert type(settings.full_name) is str
+    print(f"\tsettings.full_name = {settings.full_name!r}")
+
+    assert hasattr(settings, "hide_activity")
+    assert type(settings.hide_activity) is bool
+    print(f"\tsettings.hide_activity = {settings.hide_activity!r}")
+
+    assert hasattr(settings, "hide_email")
+    assert type(settings.hide_email) is bool
+    print(f"\tsettings.hide_email = {settings.hide_email!r}")
+
+    assert hasattr(settings, "language")
+    assert type(settings.language) is str
+    print(f"\tsettings.language = {settings.language!r}")
+
+    assert hasattr(settings, "location")
+    assert type(settings.location) is str
+    print(f"\tsettings.location = {settings.location!r}")
+
+    assert hasattr(settings, "theme")
+    assert type(settings.theme) is str
+    print(f"\tsettings.theme = {settings.theme!r}")
+
+    assert hasattr(settings, "website")
+    assert type(settings.website) is str
+    print(f"\tsettings.website = {settings.website!r}")
