@@ -22,9 +22,9 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
     assert type(user.avatar_url) is str
     print(f"\tuser.avatar_url = {user.avatar_url!r}")
 
-    assert hasattr(user, "created")
-    assert type(user.created) is str
-    print(f"\tuser.created = {user.created!r}")
+    assert hasattr(user, "created_at")
+    assert type(user.created_at) is str
+    print(f"\tuser.created_at = {user.created_at!r}")
 
     assert hasattr(user, "description")
     assert type(user.description) is str
@@ -101,9 +101,9 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert type(follower.avatar_url) is str
         print(f"\tfollower.avatar_url = {follower.avatar_url!r}")
 
-        assert hasattr(follower, "created")
-        assert type(follower.created) is str
-        print(f"\tfollower.created = {follower.created!r}")
+        assert hasattr(follower, "created_at")
+        assert type(follower.created_at) is str
+        print(f"\tfollower.created_at = {follower.created_at!r}")
 
         assert hasattr(follower, "description")
         assert type(follower.description) is str
@@ -180,9 +180,9 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert type(follow.avatar_url) is str
         print(f"\tfollow.avatar_url = {follow.avatar_url!r}")
 
-        assert hasattr(follow, "created")
-        assert type(follow.created) is str
-        print(f"\tfollow.created = {follow.created!r}")
+        assert hasattr(follow, "created_at")
+        assert type(follow.created_at) is str
+        print(f"\tfollow.created_at = {follow.created_at!r}")
 
         assert hasattr(follow, "description")
         assert type(follow.description) is str
@@ -638,3 +638,27 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert hasattr(star, "website")
         assert type(star.website) is str
         print(f"\tstar.website = {star.website!r}")
+
+    oauth2_apps = User.get_oauth2_applications(gitea, page=1, limit=100)
+    for app in oauth2_apps:
+        assert hasattr(app, "client_id")
+        assert type(app.client_id) is str
+        print(f"\tapp.client_id = {app.client_id!r}")
+
+        assert hasattr(app, "client_secret")
+        assert type(app.client_secret) is str
+        print(f"\tapp.client_secret = {app.client_secret!r}")
+
+        assert hasattr(app, "created_at")
+        assert type(app.created_at) is str
+        print(f"\tapp.created_at = {app.created_at!r}")
+
+        assert hasattr(app, "name")
+        assert type(app.name) is str
+        print(f"\tapp.name = {app.name!r}")
+
+        assert hasattr(app, "redirect_uris")
+        assert type(app.redirect_uris) is list
+        print(f"\tapp.redirect_uris = {app.redirect_uris!r}")
+        for uri in app.redirect_uris:
+            print(f"\t\turi = {uri!r}")

@@ -14,8 +14,8 @@ def test_get_user():
         assert hasattr(user, "avatar_url")
         assert type(user.avatar_url) is str
 
-        assert hasattr(user, "created")
-        assert type(user.created) is str
+        assert hasattr(user, "created_at")
+        assert type(user.created_at) is str
 
         assert hasattr(user, "description")
         assert type(user.description) is str
@@ -92,8 +92,8 @@ def test_get_followers():
             assert hasattr(follower, "avatar_url")
             assert type(follower.avatar_url) is str
 
-            assert hasattr(follower, "created")
-            assert type(follower.created) is str
+            assert hasattr(follower, "created_at")
+            assert type(follower.created_at) is str
 
             assert hasattr(follower, "description")
             assert type(follower.description) is str
@@ -154,8 +154,8 @@ def test_get_following():
             assert hasattr(user, "avatar_url")
             assert type(user.avatar_url) is str
 
-            assert hasattr(user, "created")
-            assert type(user.created) is str
+            assert hasattr(user, "created_at")
+            assert type(user.created_at) is str
 
             assert hasattr(user, "description")
             assert type(user.description) is str
@@ -505,3 +505,25 @@ def test_get_starred():
 
             assert hasattr(star, "website")
             assert type(star.website) is str
+
+
+def get_oauth2_applications(self):
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        oauth2_apps = User.get_oauth2_applications(gitea)
+        for app in oauth2_apps:
+            assert hasattr(app, "client_id")
+            assert type(app.client_id) is str
+
+            assert hasattr(app, "client_secret")
+            assert type(app.client_secret) is str
+
+            assert hasattr(app, "created_at")
+            assert type(app.created_at) is str
+
+            assert hasattr(app, "name")
+            assert type(app.name) is str
+
+            assert hasattr(app, "redirect_uris")
+            assert type(app.redirect_uris) is list
+            for uri in app.redirect_uris:
+                assert type(uri) is str

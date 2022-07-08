@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -56,10 +57,10 @@ class AddTimeOption:
 
     # TODO: Check why star after time
     # TODO: Add better description of what this is for
-    # TODO: created and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
+    # TODO: created_at and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
     """
 
-    created: str
+    created_at: str
     time: int
     user_name: str
 
@@ -71,7 +72,7 @@ class UserModel:
     Attributes:
         active: Is the user active?
         avatar_url: URL to the user's avatar.
-        created: When the user was created.
+        created_at: When the user was created.
         description: The user's description.
         email: The user's email.
         followers_count: The number of followers.
@@ -89,12 +90,12 @@ class UserModel:
         visibility: The user's visibility. (public, limited, private)
         website: The user's website.
 
-    # TODO: created and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
+    # TODO: created_at and last_login is a string, but it should be a datetime ("created": "2022-07-06T14:33:25.419Z")
     """
 
     active: bool
     avatar_url: str
-    created: str
+    created_at: str
     description: str
     email: str
     followers_count: int
@@ -286,3 +287,21 @@ class SettingsModel:
     location: str
     theme: str
     website: str
+
+
+@dataclass
+class OAuth2ApplicationModel:
+    """OAuth2Application represents an OAuth2 application.
+
+    Attributes:
+        client_id: The client ID.
+        client_secret: The client secret.
+        created: The date the application was created.
+    """
+
+    client_id: str
+    client_secret: str
+    created_at: str  # TODO: Change to datetime
+    id: int
+    name: str
+    redirect_uris: List[str]

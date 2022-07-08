@@ -1,6 +1,12 @@
 from giteapy.gitea import Gitea
 
-from giteapy.models import UserModel, EmailListModel, RepositoryModel, SettingsModel
+from giteapy.models import (
+    UserModel,
+    EmailListModel,
+    RepositoryModel,
+    SettingsModel,
+    OAuth2ApplicationModel,
+)
 from typing import Generator
 from giteapy.exceptions import UserNotFound
 
@@ -15,7 +21,7 @@ class User(Gitea):
         return UserModel(
             active=data["active"],
             avatar_url=data["avatar_url"],
-            created=data["created"],
+            created_at=data["created"],
             description=data["description"],
             email=data["email"],
             followers_count=data["followers_count"],
@@ -33,6 +39,20 @@ class User(Gitea):
             visibility=data["visibility"],
             website=data["website"],
         )
+
+    def get_oauth2_applications(self, page: int, limit: int):
+        path = "/user/applications/oauth2"
+        request = self.get_request(path, {"page": page, "limit": limit})
+        data = request.data
+        for app in data:
+            yield OAuth2ApplicationModel(
+                client_id=app["client_id"],
+                client_secret=app["client_secret"],
+                created_at=app["created"],
+                id=app["id"],
+                name=app["name"],
+                redirect_uris=app["redirect_uris"],
+            )
 
     def get_emails(self) -> Generator[EmailListModel, None, None]:
         """Get the authenticated user's email addresses.
@@ -71,7 +91,7 @@ class User(Gitea):
             yield UserModel(
                 active=user["active"],
                 avatar_url=user["avatar_url"],
-                created=user["created"],
+                created_at=user["created"],
                 description=user["description"],
                 email=user["email"],
                 followers_count=user["followers_count"],
@@ -110,7 +130,7 @@ class User(Gitea):
             yield UserModel(
                 active=user["active"],
                 avatar_url=user["avatar_url"],
-                created=user["created"],
+                created_at=user["created"],
                 description=user["description"],
                 email=user["email"],
                 followers_count=user["followers_count"],
