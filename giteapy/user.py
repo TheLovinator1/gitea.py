@@ -1,6 +1,7 @@
 from giteapy.gitea import Gitea
 
 from giteapy.models import (
+    GPGKeyModel,
     UserModel,
     EmailListModel,
     RepositoryModel,
@@ -216,8 +217,49 @@ class User(Gitea):
                 )
                 self.logger.error(error_msg, exc_info=True)
                 raise Exception(error_msg)
-
         return True
+
+    def get_gpg_key_token(self) -> str:
+        """Get the GPG key token for the authenticated user.
+
+        Returns:
+            str: The GPG key token.
+        """
+        # TODO: Need to implement when no gpg key is set.
+        path = "/user/gpg_key_token"
+        request = self.get_request(path)
+        return request.data
+
+    def get_gpg_keys(self, page: int, limit: int):
+        """Get the authenticated user's GPG keys.
+
+        Args:
+            page (int): The page number.
+            limit (int): The number of items per page.
+
+        Yields:
+            GPGKeyModel: The user's GPG keys.
+        """
+        path = "/user/gpg_keys"
+        request = self.get_request(path, {"page": page, "limit": limit})
+        data = request.data
+
+        for gpg_key in data:
+            yield GPGKeyModel(
+                can_certify=gpg_key["can_certify"],
+                can_encrypt_comms=gpg_key["can_encrypt_comms"],
+                can_encrypt_storage=gpg_key["can_encrypt_storage"],
+                can_sign=gpg_key["can_sign"],
+                created_at=gpg_key["created_at"],
+                emails=gpg_key["emails"],
+                expires_at=gpg_key["expires_at"],
+                id=gpg_key["id"],
+                key_id=gpg_key["key_id"],
+                primary_key_id=gpg_key["primary_key_id"],
+                public_key=gpg_key["public_key"],
+                subkeys=gpg_key["subkeys"],
+                verified=gpg_key["verified"],
+            )
 
     def get_repos(self, page: int, limit: int):
         """Get the authenticated user's repositories.

@@ -90,7 +90,11 @@ class Gitea:
                 self.logger.error(f"Error {status_code} while requesting {url!r}.")
 
         if response.text:
+            # /user/gpg_key_token returns text instead of JSON
+            if "/user/gpg_key_token" in path:
+                return self.RequestModel(response, response.text)
             return self.RequestModel(response, json.loads(response.text))
+
         return self.RequestModel(response, "")
 
     def post_request(

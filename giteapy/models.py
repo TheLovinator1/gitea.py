@@ -305,3 +305,31 @@ class OAuth2ApplicationModel:
     id: int
     name: str
     redirect_uris: List[str]
+
+
+@dataclass
+class GPGKeyEmailModel:
+    """An email attached to a GPGKey."""
+
+    email: str
+    verified: bool
+
+
+@dataclass
+class GPGKeyModel:
+    """A user GPG key to sign commit and tag in repository"""
+
+    # TODO: Subkeys has a lot of stuff in it that is hidden in Swagger. Fix this?
+    can_certify: bool
+    can_encrypt_comms: bool
+    can_encrypt_storage: bool
+    can_sign: bool
+    created_at: str
+    emails: List[GPGKeyEmailModel]
+    expires_at: str  # TODO: Change to datetime
+    id: int
+    key_id: str
+    primary_key_id: str
+    public_key: str
+    subkeys: List[str]
+    verified: bool

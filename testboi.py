@@ -694,5 +694,66 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
     assert hasattr(oauth2, "redirect_uris")
     assert type(oauth2.redirect_uris) is list
     print(f"\toauth2.redirect_uris = {oauth2.redirect_uris!r}")
+
     for uri in oauth2.redirect_uris:
         print(f"\t\turi = {uri!r}")
+
+    gpg_key_token = User.get_gpg_key_token(gitea)
+    print(f"\npgp_key_token = {gpg_key_token!r}")
+    assert type(gpg_key_token) is str
+
+    gpg_keys = User.get_gpg_keys(gitea, page=1, limit=100)
+    for key in gpg_keys:
+        assert hasattr(key, "can_certify")
+        assert type(key.can_certify) is bool
+        print(f"\tkey.can_certify = {key.can_certify!r}")
+
+        assert hasattr(key, "can_encrypt_comms")
+        assert type(key.can_encrypt_comms) is bool
+        print(f"\tkey.can_encrypt_comms = {key.can_encrypt_comms!r}")
+
+        assert hasattr(key, "can_encrypt_storage")
+        assert type(key.can_encrypt_storage) is bool
+        print(f"\tkey.can_encrypt_storage = {key.can_encrypt_storage!r}")
+
+        assert hasattr(key, "can_sign")
+        assert type(key.can_sign) is bool
+        print(f"\tkey.can_sign = {key.can_sign!r}")
+
+        assert hasattr(key, "created_at")
+        assert type(key.created_at) is str
+        print(f"\tkey.created_at = {key.created_at!r}")
+
+        assert hasattr(key, "emails")
+        assert type(key.emails) is list
+        for email in key.emails:
+            print(f"\t\temail = {email!r}")
+
+        assert hasattr(key, "expires_at")
+        assert type(key.expires_at) is str
+        print(f"\tkey.expires_at = {key.expires_at!r}")
+
+        assert hasattr(key, "id")
+        assert type(key.id) is int
+        print(f"\tkey.id = {key.id!r}")
+
+        assert hasattr(key, "key_id")
+        assert type(key.key_id) is str
+        print(f"\tkey.key_id = {key.key_id!r}")
+
+        assert hasattr(key, "primary_key_id")
+        assert type(key.primary_key_id) is str
+        print(f"\tkey.primary_key_id = {key.primary_key_id!r}")
+
+        assert hasattr(key, "public_key")
+        assert type(key.public_key) is str
+        print(f"\tkey.public_key = {key.public_key!r}")
+
+        assert hasattr(key, "subkeys")
+        assert type(key.subkeys) is list
+        for subkey in key.subkeys:
+            print(f"\t\tsubkey = {subkey!r}")
+
+        assert hasattr(key, "verified")
+        assert type(key.verified) is bool
+        print(f"\tkey.verified = {key.verified!r}")

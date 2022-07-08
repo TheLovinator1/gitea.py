@@ -552,3 +552,55 @@ def test_get_oauth2_application_by_id():
 
         for uri in oauth2.redirect_uris:
             assert type(uri) is str
+
+
+def test_get_gpg_key_token():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        token = User.get_gpg_key_token(gitea)
+        assert type(token) is str
+
+
+def test_get_gpg_keys():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        keys = User.get_gpg_keys(gitea, page=1, limit=100)
+        for key in keys:
+            assert hasattr(key, "can_certify")
+            assert type(key.can_certify) is bool
+
+            assert hasattr(key, "can_encrypt_comms")
+            assert type(key.can_encrypt_comms) is bool
+
+            assert hasattr(key, "can_encrypt_storage")
+            assert type(key.can_encrypt_storage) is bool
+
+            assert hasattr(key, "can_sign")
+            assert type(key.can_sign) is bool
+
+            assert hasattr(key, "created_at")
+            assert type(key.created_at) is str
+
+            assert hasattr(key, "emails")
+            assert type(key.emails) is list
+
+            assert hasattr(key, "expires_at")
+            assert type(key.expires_at) is str
+
+            assert hasattr(key, "id")
+            assert type(key.id) is int
+
+            assert hasattr(key, "key_id")
+            assert type(key.key_id) is str
+
+            assert hasattr(key, "primary_key_id")
+            assert type(key.primary_key_id) is str
+
+            assert hasattr(key, "public_key")
+            assert type(key.public_key) is str
+
+            assert hasattr(key, "subkeys")
+            assert type(key.subkeys) is list
+            for subkey in key.subkeys:
+                assert type(subkey) is dict
+
+            assert hasattr(key, "verified")
+            assert type(key.verified) is bool
