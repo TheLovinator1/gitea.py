@@ -507,9 +507,9 @@ def test_get_starred():
             assert type(star.website) is str
 
 
-def get_oauth2_applications(self):
+def test_get_oauth2_applications():
     with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
-        oauth2_apps = User.get_oauth2_applications(gitea)
+        oauth2_apps = User.get_oauth2_applications(gitea, page=1, limit=100)
         for app in oauth2_apps:
             assert hasattr(app, "client_id")
             assert type(app.client_id) is str
@@ -527,3 +527,28 @@ def get_oauth2_applications(self):
             assert type(app.redirect_uris) is list
             for uri in app.redirect_uris:
                 assert type(uri) is str
+
+
+def test_get_oauth2_application_by_id():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        oauth2 = User.get_oauth2_application_by_id(gitea, id=1)
+        assert hasattr(oauth2, "client_id")
+        assert type(oauth2.client_id) is str
+
+        assert hasattr(oauth2, "client_secret")
+        assert type(oauth2.client_secret) is str
+
+        assert hasattr(oauth2, "created_at")
+        assert type(oauth2.created_at) is str
+
+        assert hasattr(oauth2, "id")
+        assert type(oauth2.id) is int
+
+        assert hasattr(oauth2, "name")
+        assert type(oauth2.name) is str
+
+        assert hasattr(oauth2, "redirect_uris")
+        assert type(oauth2.redirect_uris) is list
+
+        for uri in oauth2.redirect_uris:
+            assert type(uri) is str

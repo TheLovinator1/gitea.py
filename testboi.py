@@ -639,6 +639,7 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert type(star.website) is str
         print(f"\tstar.website = {star.website!r}")
 
+    print("\nTesting User.get_oauth2_applications()")
     oauth2_apps = User.get_oauth2_applications(gitea, page=1, limit=100)
     for app in oauth2_apps:
         assert hasattr(app, "client_id")
@@ -653,6 +654,11 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert type(app.created_at) is str
         print(f"\tapp.created_at = {app.created_at!r}")
 
+        assert hasattr(app, "id")
+        assert type(app.id) is int
+        print(f"\tapp.id = {app.id!r}")
+        oauth2_id = app.id  # For get_oauth2_application_by_id()
+
         assert hasattr(app, "name")
         assert type(app.name) is str
         print(f"\tapp.name = {app.name!r}")
@@ -662,3 +668,31 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         print(f"\tapp.redirect_uris = {app.redirect_uris!r}")
         for uri in app.redirect_uris:
             print(f"\t\turi = {uri!r}")
+
+    print("\nTesting User.get_oauth2_application_by_id()")
+    oauth2 = User.get_oauth2_application_by_id(gitea, id=oauth2_id)
+    assert hasattr(oauth2, "client_id")
+    assert type(oauth2.client_id) is str
+    print(f"\toauth2.client_id = {oauth2.client_id!r}")
+
+    assert hasattr(oauth2, "client_secret")
+    assert type(oauth2.client_secret) is str
+    print(f"\toauth2.client_secret = {oauth2.client_secret!r}")
+
+    assert hasattr(oauth2, "created_at")
+    assert type(oauth2.created_at) is str
+    print(f"\toauth2.created_at = {oauth2.created_at!r}")
+
+    assert hasattr(oauth2, "id")
+    assert type(oauth2.id) is int
+    print(f"\toauth2.id = {oauth2.id!r}")
+
+    assert hasattr(oauth2, "name")
+    assert type(oauth2.name) is str
+    print(f"\toauth2.name = {oauth2.name!r}")
+
+    assert hasattr(oauth2, "redirect_uris")
+    assert type(oauth2.redirect_uris) is list
+    print(f"\toauth2.redirect_uris = {oauth2.redirect_uris!r}")
+    for uri in oauth2.redirect_uris:
+        print(f"\t\turi = {uri!r}")

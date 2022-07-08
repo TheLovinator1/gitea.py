@@ -8,7 +8,7 @@ from giteapy.models import (
     OAuth2ApplicationModel,
 )
 from typing import Generator
-from giteapy.exceptions import UserNotFound
+from giteapy.exceptions import OAuth2ApplicationNotFound, UserNotFound
 
 
 class User(Gitea):
@@ -53,6 +53,32 @@ class User(Gitea):
                 name=app["name"],
                 redirect_uris=app["redirect_uris"],
             )
+
+    def get_oauth2_application_by_id(self, id: int):
+        """Get an OAuth2 application by its ID.
+
+        Args:
+            id (int): The ID of the OAuth2 application.
+
+        Returns:
+            OAuth2ApplicationModel: The OAuth2 application.
+        """
+        path = f"/user/applications/oauth2/{id}"
+        request = self.get_request(path)
+        data = request.data
+
+        if hasattr(data, "message"):
+            if "The target couldn't be found." in data["message"]:
+                raise OAuth2ApplicationNotFound(id)
+
+        return OAuth2ApplicationModel(
+            client_id=data["client_id"],
+            client_secret=data["client_secret"],
+            created_at=data["created"],
+            id=data["id"],
+            name=data["name"],
+            redirect_uris=data["redirect_uris"],
+        )
 
     def get_emails(self) -> Generator[EmailListModel, None, None]:
         """Get the authenticated user's email addresses.
