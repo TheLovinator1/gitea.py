@@ -466,3 +466,175 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
     assert hasattr(settings, "website")
     assert type(settings.website) is str
     print(f"\tsettings.website = {settings.website!r}")
+
+    print("\nTesting User.get_starred()")
+    starred = User.get_starred(gitea, page=1, limit=100)
+    for star in starred:
+        assert hasattr(star, "allow_merge_commits")
+        assert type(star.allow_merge_commits) is bool
+        print(f"\tstar.allow_merge_commits = {star.allow_merge_commits!r}")
+
+        assert hasattr(star, "allow_rebase")
+        assert type(star.allow_rebase) is bool
+        print(f"\tstar.allow_rebase = {star.allow_rebase!r}")
+
+        assert hasattr(star, "allow_rebase_explicit")
+        assert type(star.allow_rebase_explicit) is bool
+        print(f"\tstar.allow_rebase_explicit = {star.allow_rebase_explicit!r}")
+
+        assert hasattr(star, "allow_squash_merge")
+        assert type(star.allow_squash_merge) is bool
+        print(f"\tstar.allow_squash_merge = {star.allow_squash_merge!r}")
+
+        assert hasattr(star, "archived")
+        assert type(star.archived) is bool
+        print(f"\tstar.archived = {star.archived!r}")
+
+        assert hasattr(star, "avatar_url")
+        assert type(star.avatar_url) is str
+        print(f"\tstar.avatar_url = {star.avatar_url!r}")
+
+        assert hasattr(star, "clone_url")
+        assert type(star.clone_url) is str
+        print(f"\tstar.clone_url = {star.clone_url!r}")
+
+        assert hasattr(star, "created_at")
+        assert type(star.created_at) is str
+        print(f"\tstar.created_at = {star.created_at!r}")
+
+        assert hasattr(star, "default_branch")
+        assert type(star.default_branch) is str
+        print(f"\tstar.default_branch = {star.default_branch!r}")
+
+        assert hasattr(star, "default_merge_style")
+        assert type(star.default_merge_style) is str
+        print(f"\tstar.default_merge_style = {star.default_merge_style!r}")
+
+        assert hasattr(star, "description")
+        assert type(star.description) is str
+        print(f"\tstar.description = {star.description!r}")
+
+        assert hasattr(star, "empty")
+        assert type(star.empty) is bool
+        print(f"\tstar.empty = {star.empty!r}")
+
+        assert hasattr(star, "fork")
+        assert type(star.fork) is bool
+        print(f"\tstar.fork = {star.fork!r}")
+
+        assert hasattr(star, "forks_count")
+        assert type(star.forks_count) is int
+        print(f"\tstar.forks_count = {star.forks_count!r}")
+
+        assert hasattr(star, "full_name")
+        assert type(star.full_name) is str
+        print(f"\tstar.full_name = {star.full_name!r}")
+
+        assert hasattr(star, "has_issues")
+        assert type(star.has_issues) is bool
+        print(f"\tstar.has_issues = {star.has_issues!r}")
+
+        assert hasattr(star, "has_projects")
+        assert type(star.has_projects) is bool
+        print(f"\tstar.has_projects = {star.has_projects!r}")
+
+        assert hasattr(star, "has_pull_requests")
+        assert type(star.has_pull_requests) is bool
+        print(f"\tstar.has_pull_requests = {star.has_pull_requests!r}")
+
+        assert hasattr(star, "has_wiki")
+        assert type(star.has_wiki) is bool
+        print(f"\tstar.has_wiki = {star.has_wiki!r}")
+
+        assert hasattr(star, "html_url")
+        assert type(star.html_url) is str
+        print(f"\tstar.html_url = {star.html_url!r}")
+
+        assert hasattr(star, "id")
+        assert type(star.id) is int
+        print(f"\tstar.id = {star.id!r}")
+
+        assert hasattr(star, "ignore_whitespace_conflicts")
+        assert type(star.ignore_whitespace_conflicts) is bool
+        print(
+            f"\tstar.ignore_whitespace_conflicts = {star.ignore_whitespace_conflicts!r}"
+        )
+
+        assert hasattr(star, "internal")
+        assert type(star.internal) is bool
+        print(f"\tstar.internal = {star.internal!r}")
+
+        assert hasattr(star, "language")
+        assert type(star.language) is str
+        print(f"\tstar.language = {star.language!r}")
+
+        assert hasattr(star, "languages_url")
+        assert type(star.languages_url) is str
+        print(f"\tstar.languages_url = {star.languages_url!r}")
+
+        assert hasattr(star, "mirror")
+        assert type(star.mirror) is bool
+        print(f"\tstar.mirror = {star.mirror!r}")
+
+        assert hasattr(star, "mirror_interval")
+        assert type(star.mirror_interval) is str
+        print(f"\tstar.mirror_interval = {star.mirror_interval!r}")
+
+        assert hasattr(star, "mirror_updated")
+        assert type(star.mirror_updated) is str
+        print(f"\tstar.mirror_updated = {star.mirror_updated!r}")
+
+        assert hasattr(star, "name")
+        assert type(star.name) is str
+        print(f"\tstar.name = {star.name!r}")
+
+        assert hasattr(star, "open_issues_count")
+        assert type(star.open_issues_count) is int
+        print(f"\tstar.open_issues_count = {star.open_issues_count!r}")
+
+        assert hasattr(star, "open_pr_counter")
+        assert type(star.open_pr_counter) is int
+        print(f"\tstar.open_pr_counter = {star.open_pr_counter!r}")
+
+        assert hasattr(star, "original_url")
+        assert type(star.original_url) is str
+        print(f"\tstar.original_url = {star.original_url!r}")
+
+        assert hasattr(star, "owner")
+        assert type(star.owner) is dict  # TODO: check type
+        print(f"\tstar.owner = {star.owner!r}")
+
+        assert hasattr(star, "parent")
+        print(f"\tstar.parent = {star.parent!r}")
+
+        assert hasattr(star, "permissions")
+        assert type(star.permissions) is dict  # TODO: check type
+        print(f"\tstar.permissions = {star.permissions!r}")
+
+        assert hasattr(star, "size")
+        assert type(star.size) is int
+        print(f"\tstar.size = {star.size!r}")
+
+        assert hasattr(star, "ssh_url")
+        assert type(star.ssh_url) is str
+        print(f"\tstar.ssh_url = {star.ssh_url!r}")
+
+        assert hasattr(star, "stars_count")
+        assert type(star.stars_count) is int
+        print(f"\tstar.stars_count = {star.stars_count!r}")
+
+        assert hasattr(star, "template")
+        assert type(star.template) is bool
+        print(f"\tstar.template = {star.template!r}")
+
+        assert hasattr(star, "updated_at")
+        assert type(star.updated_at) is str
+        print(f"\tstar.updated_at = {star.updated_at!r}")
+
+        assert hasattr(star, "watchers_count")
+        assert type(star.watchers_count) is int
+        print(f"\tstar.watchers_count = {star.watchers_count!r}")
+
+        assert hasattr(star, "website")
+        assert type(star.website) is str
+        print(f"\tstar.website = {star.website!r}")

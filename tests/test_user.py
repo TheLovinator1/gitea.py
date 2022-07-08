@@ -375,3 +375,133 @@ def test_get_settings():
 
         assert hasattr(settings, "website")
         assert type(settings.website) is str
+
+
+def test_get_starred():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        starred = User.get_starred(gitea, page=1, limit=100)
+        for star in starred:
+            assert hasattr(star, "allow_merge_commits")
+            assert type(star.allow_merge_commits) is bool
+
+            assert hasattr(star, "allow_rebase")
+            assert type(star.allow_rebase) is bool
+
+            assert hasattr(star, "allow_rebase_explicit")
+            assert type(star.allow_rebase_explicit) is bool
+
+            assert hasattr(star, "allow_squash_merge")
+            assert type(star.allow_squash_merge) is bool
+
+            assert hasattr(star, "archived")
+            assert type(star.archived) is bool
+
+            assert hasattr(star, "avatar_url")
+            assert type(star.avatar_url) is str
+
+            assert hasattr(star, "clone_url")
+            assert type(star.clone_url) is str
+
+            assert hasattr(star, "created_at")
+            assert type(star.created_at) is str
+
+            assert hasattr(star, "default_branch")
+            assert type(star.default_branch) is str
+
+            assert hasattr(star, "default_merge_style")
+            assert type(star.default_merge_style) is str
+
+            assert hasattr(star, "description")
+            assert type(star.description) is str
+
+            assert hasattr(star, "empty")
+            assert type(star.empty) is bool
+
+            assert hasattr(star, "fork")
+            assert type(star.fork) is bool
+
+            assert hasattr(star, "forks_count")
+            assert type(star.forks_count) is int
+
+            assert hasattr(star, "full_name")
+            assert type(star.full_name) is str
+
+            assert hasattr(star, "has_issues")
+            assert type(star.has_issues) is bool
+
+            assert hasattr(star, "has_projects")
+            assert type(star.has_projects) is bool
+
+            assert hasattr(star, "has_pull_requests")
+            assert type(star.has_pull_requests) is bool
+
+            assert hasattr(star, "has_wiki")
+            assert type(star.has_wiki) is bool
+
+            assert hasattr(star, "html_url")
+            assert type(star.html_url) is str
+
+            assert hasattr(star, "id")
+            assert type(star.id) is int
+
+            assert hasattr(star, "ignore_whitespace_conflicts")
+            assert type(star.ignore_whitespace_conflicts) is bool
+
+            assert hasattr(star, "internal")
+            assert type(star.internal) is bool
+
+            assert hasattr(star, "language")
+            assert type(star.language) is str
+
+            assert hasattr(star, "languages_url")
+            assert type(star.languages_url) is str
+
+            assert hasattr(star, "mirror")
+            assert type(star.mirror) is bool
+
+            assert hasattr(star, "mirror_interval")
+            assert type(star.mirror_interval) is str
+
+            assert hasattr(star, "mirror_updated")
+            assert type(star.mirror_updated) is str
+
+            assert hasattr(star, "name")
+            assert type(star.name) is str
+
+            assert hasattr(star, "open_issues_count")
+            assert type(star.open_issues_count) is int
+
+            assert hasattr(star, "open_pr_counter")
+            assert type(star.open_pr_counter) is int
+
+            assert hasattr(star, "original_url")
+            assert type(star.original_url) is str
+
+            assert hasattr(star, "owner")
+            assert type(star.owner) is dict  # TODO: check type
+
+            assert hasattr(star, "parent")  # TODO: check type
+
+            assert hasattr(star, "permissions")
+            assert type(star.permissions) is dict  # TODO: check type
+
+            assert hasattr(star, "size")
+            assert type(star.size) is int
+
+            assert hasattr(star, "ssh_url")
+            assert type(star.ssh_url) is str
+
+            assert hasattr(star, "stars_count")
+            assert type(star.stars_count) is int
+
+            assert hasattr(star, "template")
+            assert type(star.template) is bool
+
+            assert hasattr(star, "updated_at")
+            assert type(star.updated_at) is str
+
+            assert hasattr(star, "watchers_count")
+            assert type(star.watchers_count) is int
+
+            assert hasattr(star, "website")
+            assert type(star.website) is str
