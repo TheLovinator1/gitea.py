@@ -213,3 +213,134 @@ def test_if_following():
         # if_following() throws an exception if the user doesn't exist
         with pytest.raises(UserNotFound, match="User 'IDontExists' not found."):
             User.if_following(gitea, "IDontExists")
+
+
+def test_get_repos():
+    with Gitea(url=pytest.url, token=pytest.token, log_level="DEBUG") as gitea:
+        repos = User.get_repos(gitea, page=1, limit=100)
+        for repo in repos:
+            assert hasattr(repo, "allow_merge_commits")
+            assert type(repo.allow_merge_commits) is bool
+
+            assert hasattr(repo, "allow_rebase")
+            assert type(repo.allow_rebase) is bool
+
+            assert hasattr(repo, "allow_rebase_explicit")
+            assert type(repo.allow_rebase_explicit) is bool
+
+            assert hasattr(repo, "allow_squash_merge")
+            assert type(repo.allow_squash_merge) is bool
+
+            assert hasattr(repo, "archived")
+            assert type(repo.archived) is bool
+
+            assert hasattr(repo, "avatar_url")
+            assert type(repo.avatar_url) is str
+
+            assert hasattr(repo, "clone_url")
+            assert type(repo.clone_url) is str
+
+            assert hasattr(repo, "created_at")
+            assert type(repo.created_at) is str
+
+            assert hasattr(repo, "default_branch")
+            assert type(repo.default_branch) is str
+
+            assert hasattr(repo, "default_merge_style")
+            assert type(repo.default_merge_style) is str
+
+            assert hasattr(repo, "description")
+            assert type(repo.description) is str
+
+            assert hasattr(repo, "empty")
+            assert type(repo.empty) is bool
+
+            assert hasattr(repo, "fork")
+            assert type(repo.fork) is bool
+
+            assert hasattr(repo, "forks_count")
+            assert type(repo.forks_count) is int
+
+            assert hasattr(repo, "full_name")
+            assert type(repo.full_name) is str
+
+            assert hasattr(repo, "has_issues")
+            assert type(repo.has_issues) is bool
+
+            assert hasattr(repo, "has_projects")
+            assert type(repo.has_projects) is bool
+
+            assert hasattr(repo, "has_pull_requests")
+            assert type(repo.has_pull_requests) is bool
+
+            assert hasattr(repo, "has_wiki")
+            assert type(repo.has_wiki) is bool
+
+            assert hasattr(repo, "html_url")
+            assert type(repo.html_url) is str
+
+            assert hasattr(repo, "id")
+            assert type(repo.id) is int
+
+            assert hasattr(repo, "ignore_whitespace_conflicts")
+            assert type(repo.ignore_whitespace_conflicts) is bool
+
+            assert hasattr(repo, "internal")
+            assert type(repo.internal) is bool
+
+            assert hasattr(repo, "language")
+            assert type(repo.language) is str
+
+            assert hasattr(repo, "languages_url")
+            assert type(repo.languages_url) is str
+
+            assert hasattr(repo, "mirror")
+            assert type(repo.mirror) is bool
+
+            assert hasattr(repo, "mirror_interval")
+            assert type(repo.mirror_interval) is str
+
+            assert hasattr(repo, "mirror_updated")
+            assert type(repo.mirror_updated) is str
+
+            assert hasattr(repo, "name")
+            assert type(repo.name) is str
+
+            assert hasattr(repo, "open_issues_count")
+            assert type(repo.open_issues_count) is int
+
+            assert hasattr(repo, "open_pr_counter")
+            assert type(repo.open_pr_counter) is int
+
+            assert hasattr(repo, "original_url")
+            assert type(repo.original_url) is str
+
+            assert hasattr(repo, "owner")
+            assert type(repo.owner) is dict  # TODO: check type
+
+            assert hasattr(repo, "parent")  # TODO: check type
+
+            assert hasattr(repo, "permissions")
+            assert type(repo.permissions) is dict  # TODO: check type
+
+            assert hasattr(repo, "size")
+            assert type(repo.size) is int
+
+            assert hasattr(repo, "ssh_url")
+            assert type(repo.ssh_url) is str
+            print(f"\trepo.ssh_url = {repo.ssh_url!r}")
+
+            assert hasattr(repo, "stars_count")
+            assert type(repo.stars_count) is int
+
+            assert hasattr(repo, "template")
+            assert type(repo.template) is bool
+
+            assert hasattr(repo, "updated_at")
+            assert type(repo.updated_at) is str
+
+            assert hasattr(repo, "watchers_count")
+            assert type(repo.watchers_count) is int
+
+            assert hasattr(repo, "website")
+            assert type(repo.website) is str

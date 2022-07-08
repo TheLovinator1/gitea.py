@@ -128,3 +128,143 @@ class EmailListModel:
     email: str
     primary: bool
     verified: bool
+
+
+@dataclass
+class ExternalTrackerModel:
+    """ExternalTrackerModel represents an external tracker.
+
+    external_tracker_format: External Issue Tracker URL Format. Use the
+        placeholders {user}, {repo} and {index} for the username, repository name
+        and issue index.
+    external_tracker_style: External Issue Tracker Number Format, either numeric or alphanumeric
+    external_tracker_url: External Issue Tracker URL.
+
+    """
+
+    external_tracker_format: str
+    external_tracker_style: str
+    external_tracker_url: str
+
+
+@dataclass
+class ExternalWikiModel:
+    """ExternalWiki represents setting for external wiki.
+
+    external_wiki_format: URL of external wiki.
+    """
+
+    external_wiki_url: str
+
+
+@dataclass
+class InternalTrackerModel:
+    """InternalTracker represents settings for internal tracker
+
+    allow_only_contributors_to_track_time: Let only contributors track time (Built-in issue tracker)
+    enable_issue_dependencies: Enable dependencies for issues and pull requests (Built-in issue tracker)
+    enable_issue_links: Enable issue links (Built-in issue tracker)
+    """
+
+    allow_only_contributors_to_track_time: bool
+    enable_issue_dependencies: bool
+    enable_timetracking: bool
+
+
+@dataclass
+class PermissionModel:
+    """Permission represents a set of permissions"""
+
+    admin: bool
+    push: bool
+    pull: bool
+
+
+@dataclass
+class OrganizationModel:
+    avatar_url: str
+    description: str
+    full_name: str
+    id: int
+    location: str
+    repo_admin_change_team_access: bool
+    username: str
+    visibility: str
+    website: str
+
+
+@dataclass
+class TeamModel:
+    """Team represents a team in an organization"""
+
+    can_create_org_repo: bool
+    description: str
+    id: int
+    includes_all_repositories: bool
+    name: str
+    organization: OrganizationModel
+    permission: str  # none, read, write, admin, owner
+    units: str
+    units_map: str
+
+
+@dataclass
+class RepoTransferModel:
+    """RepoTransfer represents a pending repo transfer"""
+
+    doer: UserModel
+    recipient: UserModel
+    teams: TeamModel
+
+
+@dataclass
+class RepositoryModel:
+    # TODO: Fix external_tracker, external_wiki and internal_tracker
+    allow_merge_commits: bool
+    allow_rebase: bool
+    allow_rebase_explicit: bool
+    allow_squash_merge: bool
+    archived: bool
+    avatar_url: str
+    clone_url: str
+    created_at: str  # TODO: Change to datetime
+    default_branch: str
+    default_merge_style: str
+    description: str
+    empty: bool
+    # external_tracker: ExternalTrackerModel
+    # external_wiki: ExternalWikiModel
+    fork: bool
+    forks_count: int
+    full_name: str
+    has_issues: bool
+    has_projects: bool
+    has_pull_requests: bool
+    has_wiki: bool
+    html_url: str
+    id: int
+    ignore_whitespace_conflicts: bool
+    internal: bool
+    # internal_tracker: InternalTrackerModel
+    language: str
+    languages_url: str
+    mirror: bool
+    mirror_interval: str
+    mirror_updated: str  # TODO: Change to datetime
+    name: str
+    open_issues_count: int
+    open_pr_counter: int
+    original_url: str
+    owner: UserModel
+    parent: str  # TODO: What is this?
+    permissions: PermissionModel
+    private: bool
+    release_counter: int
+    repo_transfer: RepoTransferModel
+    size: int
+    ssh_url: str
+    stars_count: int
+    template: bool
+    updated_at: str  # TODO: Change to datetime
+    watchers_count: int
+    website: str

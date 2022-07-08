@@ -1,6 +1,6 @@
 from giteapy.gitea import Gitea
 
-from giteapy.models import UserModel, EmailListModel
+from giteapy.models import UserModel, EmailListModel, RepositoryModel
 from typing import Generator
 from giteapy.exceptions import UserNotFound
 
@@ -172,3 +172,70 @@ class User(Gitea):
                 raise Exception(error_msg)
 
         return True
+
+    def get_repos(self, page: int, limit: int):
+        """Get the authenticated user's repositories.
+
+        Args:
+            page (int): Page number of results to return (1-based)
+            limit (int): The number of items per page.
+
+        Yields:
+            RepositoryModel: The user's repositories.
+        """
+
+        path = "/user/repos"
+        request = self.get_request(path, {"page": page, "limit": limit})
+        data = request.data
+
+        for repo in data:
+            yield RepositoryModel(
+                allow_merge_commits=repo["allow_merge_commits"],
+                allow_rebase=repo["allow_rebase"],
+                allow_rebase_explicit=repo["allow_rebase_explicit"],
+                allow_squash_merge=repo["allow_squash_merge"],
+                archived=repo["archived"],
+                avatar_url=repo["avatar_url"],
+                clone_url=repo["clone_url"],
+                created_at=repo["created_at"],
+                default_branch=repo["default_branch"],
+                default_merge_style=repo["default_merge_style"],
+                description=repo["description"],
+                empty=repo["empty"],
+                # external_tracker=repo["external_tracker"],
+                # external_wiki=repo["external_wiki"],
+                fork=repo["fork"],
+                forks_count=repo["forks_count"],
+                full_name=repo["full_name"],
+                has_issues=repo["has_issues"],
+                has_projects=repo["has_projects"],
+                has_pull_requests=repo["has_pull_requests"],
+                has_wiki=repo["has_wiki"],
+                html_url=repo["html_url"],
+                id=repo["id"],
+                ignore_whitespace_conflicts=repo["ignore_whitespace_conflicts"],
+                internal=repo["internal"],
+                # internal_tracker=repo["internal_tracker"],
+                language=repo["language"],
+                languages_url=repo["languages_url"],
+                mirror=repo["mirror"],
+                mirror_interval=repo["mirror_interval"],
+                mirror_updated=repo["mirror_updated"],
+                name=repo["name"],
+                open_issues_count=repo["open_issues_count"],
+                open_pr_counter=repo["open_pr_counter"],
+                original_url=repo["original_url"],
+                owner=repo["owner"],
+                parent=repo["parent"],
+                permissions=repo["permissions"],
+                private=repo["private"],
+                release_counter=repo["release_counter"],
+                repo_transfer=repo["repo_transfer"],
+                size=repo["size"],
+                ssh_url=repo["ssh_url"],
+                stars_count=repo["stars_count"],
+                template=repo["template"],
+                updated_at=repo["updated_at"],
+                watchers_count=repo["watchers_count"],
+                website=repo["website"],
+            )
