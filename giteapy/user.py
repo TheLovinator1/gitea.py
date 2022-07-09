@@ -261,6 +261,29 @@ class User(Gitea):
                 verified=gpg_key["verified"],
             )
 
+    def get_gpg_key_by_id(self, id: int):
+        path = f"/user/gpg_keys/{id}"
+        request = self.get_request(path)
+        data = request.data
+
+        # TOOD: Implement when no gpg key is set.
+
+        return GPGKeyModel(
+            can_certify=data["can_certify"],
+            can_encrypt_comms=data["can_encrypt_comms"],
+            can_encrypt_storage=data["can_encrypt_storage"],
+            can_sign=data["can_sign"],
+            created_at=data["created_at"],
+            emails=data["emails"],
+            expires_at=data["expires_at"],
+            id=data["id"],
+            key_id=data["key_id"],
+            primary_key_id=data["primary_key_id"],
+            public_key=data["public_key"],
+            subkeys=data["subkeys"],
+            verified=data["verified"],
+        )
+
     def get_repos(self, page: int, limit: int):
         """Get the authenticated user's repositories.
 

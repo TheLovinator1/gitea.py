@@ -12,3 +12,11 @@ class OAuth2ApplicationNotFound(Exception):
     def __init__(self, id: int):
         self.id = id
         super().__init__(f"OAuth2 Application with id {id!r} not found.")
+
+
+class GPGKeyNotFound(Exception):
+    """The GPG Key was not found."""
+
+    def __init__(self, id: int):
+        self.id = id
+        super().__init__(f"GPG Key with id {id!r} not found.")

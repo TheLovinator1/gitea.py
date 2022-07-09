@@ -736,6 +736,7 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert hasattr(key, "id")
         assert type(key.id) is int
         print(f"\tkey.id = {key.id!r}")
+        gpg_key_id = key.id  # For get_gpg_key_by_id()
 
         assert hasattr(key, "key_id")
         assert type(key.key_id) is str
@@ -757,3 +758,38 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
         assert hasattr(key, "verified")
         assert type(key.verified) is bool
         print(f"\tkey.verified = {key.verified!r}")
+
+    print("\nTesting User.get_gpg_key_by_id()")
+    gpg_key = User.get_gpg_key_by_id(gitea, id=gpg_key_id)
+    assert hasattr(gpg_key, "can_certify")
+    assert type(gpg_key.can_certify) is bool
+    print(f"\tgpg_key.can_certify = {gpg_key.can_certify!r}")
+
+    assert hasattr(gpg_key, "can_encrypt_comms")
+    assert type(gpg_key.can_encrypt_comms) is bool
+    print(f"\tgpg_key.can_encrypt_comms = {gpg_key.can_encrypt_comms!r}")
+
+    assert hasattr(gpg_key, "can_encrypt_storage")
+    assert type(gpg_key.can_encrypt_storage) is bool
+    print(f"\tgpg_key.can_encrypt_storage = {gpg_key.can_encrypt_storage!r}")
+
+    assert hasattr(gpg_key, "can_sign")
+    assert type(gpg_key.can_sign) is bool
+    print(f"\tgpg_key.can_sign = {gpg_key.can_sign!r}")
+
+    assert hasattr(gpg_key, "created_at")
+    assert type(gpg_key.created_at) is str
+    print(f"\tgpg_key.created_at = {gpg_key.created_at!r}")
+
+    assert hasattr(gpg_key, "emails")
+    assert type(gpg_key.emails) is list
+    for email in gpg_key.emails:
+        print(f"\t\temail = {email!r}")
+
+    assert hasattr(gpg_key, "expires_at")
+    assert type(gpg_key.expires_at) is str
+    print(f"\tgpg_key.expires_at = {gpg_key.expires_at!r}")
+
+    assert hasattr(gpg_key, "id")
+    assert type(gpg_key.id) is int
+    print(f"\tgpg_key.id = {gpg_key.id!r}")
