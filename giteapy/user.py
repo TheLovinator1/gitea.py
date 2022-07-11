@@ -266,7 +266,7 @@ class User(Gitea):
         request = self.get_request(path)
         data = request.data
 
-        # TOOD: Implement when no gpg key is set.
+        # TODO: Implement when no gpg key is set.
 
         return GPGKeyModel(
             can_certify=data["can_certify"],
