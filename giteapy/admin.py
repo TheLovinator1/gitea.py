@@ -3,24 +3,31 @@ from giteapy.gitea import Gitea
 
 class Admin(Gitea):
     def list_cron_tasks(self, page: int, limit: int):
+        # TODO: Implement me
         raise NotImplementedError
 
     def run_cron_task(self, task: str):
+        # TODO: Implement me
         raise NotImplementedError
 
     def list_all_organizations(self, page: int, limit: int):
+        # TODO: Implement me
         raise NotImplementedError
 
     def list_unadopted_repositories(self, page: int, limit: int, pattern: str):
+        # TODO: Implement me
         raise NotImplementedError
 
     def adopt_unadopted_files(self, owner: str, repo: str):
+        # TODO: Implement me
         raise NotImplementedError
 
     def delete_unadopted_files(self, owner: str, repo: str):
+        # TODO: Implement me
         raise NotImplementedError
 
     def list_all_users(self, page: int, limit: int):
+        # TODO: Implement me
         raise NotImplementedError
 
     def create_user(
@@ -36,9 +43,11 @@ class Admin(Gitea):
         username: str,
         visibility: str,  # public, private, internal
     ):
+        # TODO: Implement me
         raise NotImplementedError
 
     def delete_a_user(self):
+        # TODO: Implement me
         raise NotImplementedError
 
     def edit_a_user(
@@ -63,12 +72,15 @@ class Admin(Gitea):
         visibility: str,  # public, private, internal
         website: str,
     ):
+        # TODO: Implement me
         raise NotImplementedError
 
     def add_a_public_key(self, username: str, key: str, read_only: bool, title: str):
+        # TODO: Implement me
         raise NotImplementedError
 
     def delete_a_public_key(self, username: str, key_id: int):
+        # TODO: Implement me
         raise NotImplementedError
 
     def create_a_organization(
@@ -81,6 +93,7 @@ class Admin(Gitea):
         visibility: str,  # public, private, internal
         website: str,
     ):
+        # TODO: Implement me
         raise NotImplementedError
 
     def create_repo_for_user(
@@ -98,4 +111,5 @@ class Admin(Gitea):
         template: str,
         trust_model: str,  # default, collaborator, committer, collaboratorcommitter
     ):
+        # TODO: Implement me
         raise NotImplementedError
