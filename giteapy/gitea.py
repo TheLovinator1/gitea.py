@@ -47,21 +47,14 @@ class Gitea:
         data: typing.Any
 
     def log_request(self, request):
-        self.logger.debug(
-            f"Request event hook: {request.method} {request.url} - Waiting for response"
-        )
+        self.logger.debug(f"Request event hook: {request.method} {request.url} - Waiting for response")
 
     def log_response(self, response):
         request = response.request
-        self.logger.debug(
-            f"Response event hook: {request.method} {request.url} - Status {response.status_code}"
-        )
+        self.logger.debug(f"Response event hook: {request.method} {request.url} - Status {response.status_code}")
 
     def get_request(
-        self,
-        path: str,
-        params: typing.Optional[QueryParamTypes] = None,
-        silence_404: bool = False,
+        self, path: str, params: typing.Optional[QueryParamTypes] = None, silence_404: bool = False
     ) -> RequestModel:
         """Do a GET request to the API.
 
