@@ -23,4 +23,4 @@ There is also an `testboi.py` file in the root directory that can be used to tes
 
 - Email: [tlovinator@gmail.com](mailto:tlovinator@gmail.com)
 - Discord: TheLovinator#9276
-- Send an issue: [GitHub](https://github.com/TheLovinator1/gitea.py/issues) [Gitea](https://git.lovinator.space/TheLovinator/gitea.py/issues)
+- Send an issue: [GitHub](https://github.com/TheLovinator1/gitea.py/issues) | [Gitea](https://git.lovinator.space/TheLovinator/gitea.py/issues)
