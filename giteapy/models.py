@@ -333,3 +333,14 @@ class GPGKeyModel:
     public_key: str
     subkeys: List[str]
     verified: bool
+
+
+@dataclass
+class CronModel:
+    """A cron task"""
+
+    exec_times: int
+    name: str
+    next: str  # TODO: Change to datetime
+    prev: str  # TODO: Change to datetime
+    schedule: str

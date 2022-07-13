@@ -1,9 +1,41 @@
+from typing import Generator
 from giteapy.gitea import Gitea
+from giteapy.models import CronModel
+from giteapy.exceptions import APIForbiddenError
 
 
 class Admin(Gitea):
-    def list_cron_tasks(self, page: int, limit: int):
-        raise NotImplementedError
+    def cron_tasks(self, page: int, limit: int) -> Generator[CronModel, None, None]:
+        """List cron tasks. Also called cron jobs.
+
+        Args:
+            page: Page number (1-based).
+            limit: How many results to return per page
+
+        Yields:
+            CronModel: The cron task.
+
+        Raises:
+            APIForbiddenError: If the user is not an admin.
+        """
+        path = "/admin/cron"
+
+        params = {"page": page, "limit": limit}
+        request = self.get_request(path, params)
+        data = request.data
+
+        if request.response.status_code == 200:
+            for task in data:
+                yield CronModel(
+                    exec_times=task["exec_times"],
+                    name=task["name"],
+                    next=task["next"],
+                    prev=task["prev"],
+                    schedule=task["schedule"],
+                )
+        elif request.response.status_code == 403:
+            # TODO: Run test as non-admin user and check that this error is raised.
+            raise APIForbiddenError(message=data["message"], url=data["url"])
 
     def run_cron_task(self, task: str):
         raise NotImplementedError
