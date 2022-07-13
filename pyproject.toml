@@ -5,6 +5,11 @@ description = "An API wrapper for Gitea written in Python"
 authors = ["Joakim Hellsén <tlovinator@gmail.com>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
+homepage = "https://git.lovinator.space/TheLovinator/gitea.py"
+repository = "https://git.lovinator.space/TheLovinator/gitea.py"
+documentation = "https://git.lovinator.space/TheLovinator/gitea.py"
+keywords = ["gitea", "wrapper", "python"]
+
 [tool.poetry.dependencies]
 python = "^3.10"
 httpx = "^0.23.0"
