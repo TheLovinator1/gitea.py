@@ -8,14 +8,26 @@ from giteapy.models import (
     SettingsModel,
     OAuth2ApplicationModel,
 )
-from typing import Generator
+from typing import Generator, List
 from giteapy.exceptions import OAuth2ApplicationNotFound, UserNotFound
 
 
 class User(Gitea):
-    def get_user(self) -> UserModel:
-        """Get the authenticated user."""
+    def get_user(self, username: str = None) -> UserModel:
+        """Get a user by username.
+
+        Args:
+            username: If specified, get username's user instead of the authenticated user's.
+
+        Returns:
+            UserModel: The user.
+        """
         path = "/user"
+
+        if username:
+            path = f"/users/{username}"
+            self.logger.info(f"Getting user {username}")
+
         request = self.get_request(path)
         data = request.data
 
@@ -43,8 +55,10 @@ class User(Gitea):
 
     def get_oauth2_applications(self, page: int, limit: int):
         path = "/user/applications/oauth2"
+
         request = self.get_request(path, {"page": page, "limit": limit})
         data = request.data
+
         for app in data:
             yield OAuth2ApplicationModel(
                 client_id=app["client_id"],
@@ -54,6 +68,9 @@ class User(Gitea):
                 name=app["name"],
                 redirect_uris=app["redirect_uris"],
             )
+
+    def create_oauth2_application(self, name: str, redirect_uris: List[str]):
+        raise NotImplementedError
 
     def get_oauth2_application_by_id(self, id: int):
         """Get an OAuth2 application by its ID.
@@ -65,6 +82,7 @@ class User(Gitea):
             OAuth2ApplicationModel: The OAuth2 application.
         """
         path = f"/user/applications/oauth2/{id}"
+
         request = self.get_request(path)
         data = request.data
 
@@ -81,6 +99,12 @@ class User(Gitea):
             redirect_uris=data["redirect_uris"],
         )
 
+    def delete_oauth2_application(self, id: int):
+        raise NotImplementedError
+
+    def update_oauth2_application(self, id: int, name: str, redirect_uris: List[str]):
+        raise NotImplementedError
+
     def get_emails(self) -> Generator[EmailListModel, None, None]:
         """Get the authenticated user's email addresses.
 
@@ -88,6 +112,7 @@ class User(Gitea):
             EmailListModel: The user's email addresses.
         """
         path = "/user/emails"
+
         request = self.get_request(path)
         data = request.data
 
@@ -98,12 +123,19 @@ class User(Gitea):
                 primary=email["primary"],
             )
 
-    def get_followers(self, page, limit):
+    def add_new_email_address(self, email: str):
+        raise NotImplementedError
+
+    def delete_email_address(self, email: str):
+        raise NotImplementedError
+
+    def get_followers(self, page: int, limit: int, username: str = None):
         """Get the authenticated user's followers.
 
         Args:
             page (int): The page number.
             limit (int): The number of items per page.
+            username: If specified, get username's followers instead of the authenticated user's.
 
         Yields:
             UserModel: The user's followers.
@@ -111,6 +143,11 @@ class User(Gitea):
         # TODO: Implement pagination and always get max limit if limit is unspecified.
         """
         path = "/user/followers"
+
+        if username:
+            path = f"/users/{username}/followers"
+            self.logger.info(f"Getting followers for user {username}")
+
         request = self.get_request(path=path, params={"page": page, "limit": limit})
         data = request.data
 
@@ -137,19 +174,26 @@ class User(Gitea):
                 website=user["website"],
             )
 
-    def get_following(self, page, limit):
+    def get_following(self, page: int, limit: int, username: str = None):
         """Get a list of users the authenticated user is following.
 
         Args:
-            page (int): The page number.
-            limit (int): The number of items per page.
+            page: The page number.
+            limit: The number of items per page.
+            username: If specified, get username's followers instead of the authenticated user's.
 
         Yields:
             UserModel: The user's following.
 
-        # TODO: Implement pagination and always get max limit if limit is unspecified.
+        # TODO: Implement pagination and always get max limit if limit is
+        unspecified.
         """
         path = "/user/following"
+
+        if username:
+            path = f"/users/{username}/following"
+            self.logger.info(f"Getting user {username}")
+
         request = self.get_request(path, {"page": page, "limit": limit})
         data = request.data
 
@@ -176,11 +220,12 @@ class User(Gitea):
                 website=user["website"],
             )
 
-    def if_following(self, username: str) -> bool:
-        """Check if the authenticated user is following the given username.
+    def if_following(self, username: str, target: str = None) -> bool:
+        """Check if a user is following the given username.
 
         Args:
-            username (str): The username of the user to check.
+            username (str): Username of the following user.
+            target: Username of the followed user. If not specified, the authenticated user is checked.
 
         Raises:
             UserNotFound: The user was not found.
@@ -189,6 +234,10 @@ class User(Gitea):
             bool: True if we are following the user, False otherwise.
         """
         path = f"/user/following/{username}"
+
+        if target:
+            path = f"/users/{username}/following/{target}"
+            self.logger.info(f"Getting user {username}")
 
         # If user is not following, the request will return a 404.
         # We need to silence that.
@@ -219,6 +268,12 @@ class User(Gitea):
                 raise Exception(error_msg)
         return True
 
+    def follow_user(self, username: str):
+        raise NotImplementedError
+
+    def unfollow_user(self, username: str):
+        raise NotImplementedError
+
     def get_gpg_key_token(self) -> str:
         """Get the GPG key token for the authenticated user.
 
@@ -229,6 +284,9 @@ class User(Gitea):
         path = "/user/gpg_key_token"
         request = self.get_request(path)
         return request.data
+
+    def verify_gpg_key_token(self, token: str) -> bool:
+        raise NotImplementedError
 
     def get_gpg_keys(self, page: int, limit: int):
         """Get the authenticated user's GPG keys.
@@ -241,6 +299,7 @@ class User(Gitea):
             GPGKeyModel: The user's GPG keys.
         """
         path = "/user/gpg_keys"
+
         request = self.get_request(path, {"page": page, "limit": limit})
         data = request.data
 
@@ -260,6 +319,9 @@ class User(Gitea):
                 subkeys=gpg_key["subkeys"],
                 verified=gpg_key["verified"],
             )
+
+    def create_gpg_key(self, armored_public_key: str, armored_signature: str):
+        raise NotImplementedError
 
     def get_gpg_key_by_id(self, id: int):
         path = f"/user/gpg_keys/{id}"
@@ -284,18 +346,44 @@ class User(Gitea):
             verified=data["verified"],
         )
 
-    def get_repos(self, page: int, limit: int):
+    def remove_gpg_key(self, id: int):
+        raise NotImplementedError
+
+    def get_public_keys(self, fingerprint: str, page: int, limit: int, username: str = None):
+        if username:
+            # path = f"/users/{username}/keys"
+            self.logger.info(f"Getting user {username}")
+
+        raise NotImplementedError
+
+    def create_public_key(self, key: str, read_only: bool, title: str):
+        raise NotImplementedError
+
+    def get_public_key_by_id(self, id: int):
+        raise NotImplementedError
+
+    def delete_public_key(self, id: int):
+        raise NotImplementedError
+
+    def get_repos(self, page: int, limit: int, username: str = None):
         """Get the authenticated user's repositories.
 
         Args:
-            page (int): Page number of results to return (1-based)
-            limit (int): The number of items per page.
+            page: Page number of results to return (1-based)
+            limit: The number of items per page.
+            username: If specified, get username's user instead of the authenticated user's.
+
 
         Yields:
             RepositoryModel: The user's repositories.
         """
 
         path = "/user/repos"
+
+        if username:
+            path = f"/users/{username}/repos"
+            self.logger.info(f"Getting user {username}")
+
         request = self.get_request(path, {"page": page, "limit": limit})
         data = request.data
 
@@ -350,6 +438,22 @@ class User(Gitea):
                 watchers_count=repo["watchers_count"],
                 website=repo["website"],
             )
+
+    def create_repo(
+        self,
+        auto_init: bool,
+        default_branch: str,
+        description: str,
+        gitignores: str,
+        issue_labels: str,
+        license: str,
+        name: str,
+        private: bool,
+        readme: str,
+        template: bool,
+        trust_model: str,
+    ):
+        raise NotImplementedError
 
     def get_settings(self):
         """Get the authenticated user's settings.
@@ -373,7 +477,21 @@ class User(Gitea):
             website=data["website"],
         )
 
-    def get_starred(self, page: int, limit: int):
+    def update_settings(
+        self,
+        description: str,
+        diff_view_style: str,
+        full_name: str,
+        hide_activity: bool,
+        hide_email: bool,
+        language: str,
+        location: str,
+        theme: str,
+        website: str,
+    ):
+        raise NotImplementedError
+
+    def get_starred(self, page: int, limit: int, username: str = None):
         """Get repositories you have starred.
 
         Args:
@@ -383,8 +501,12 @@ class User(Gitea):
         Yields:
             RepositoryModel: The user's starred repositories.
         """
-
         path = "/user/starred"
+
+        if username:
+            path = f"/users/{username}/starred"
+            self.logger.info(f"Getting user {username}")
+
         request = self.get_request(path, {"page": page, "limit": limit})
         data = request.data
 
@@ -439,3 +561,39 @@ class User(Gitea):
                 watchers_count=repo["watchers_count"],
                 website=repo["website"],
             )
+
+    def if_starred(self, owner: str, repo: str):
+        raise NotImplementedError
+
+    def star(self, owner: str, repo: str):
+        raise NotImplementedError
+
+    def unstar(self, owner: str, repo: str):
+        raise NotImplementedError
+
+    def stopwatches(self, page: int, limit: int):
+        raise NotImplementedError
+
+    def subscriptions(self, page: int, limit: int, username: str = None):
+        raise NotImplementedError
+
+    def teams(self, page: int, limit: int):
+        raise NotImplementedError
+
+    def times(self, page: int, limit: int):
+        raise NotImplementedError
+
+    def search_user(self, user_id: int, query: str, page: int, limit: int):
+        raise NotImplementedError
+
+    def heatmap(self, username: str):
+        raise NotImplementedError
+
+    def access_tokens(self, page: int, limit: int, username: str = None):
+        raise NotImplementedError
+
+    def create_access_token(self, token_name: str, username: str = None):
+        raise NotImplementedError
+
+    def delete_access_token(self, token_name: str, username: str = None):
+        raise NotImplementedError
