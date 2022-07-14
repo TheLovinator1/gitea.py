@@ -1,6 +1,7 @@
 import os
 from giteapy.gitea import Gitea
 from giteapy.user import User
+from giteapy.admin import Admin
 from dotenv import load_dotenv
 import logging
 
@@ -346,9 +347,7 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
 
         assert hasattr(repo, "ignore_whitespace_conflicts")
         assert type(repo.ignore_whitespace_conflicts) is bool
-        print(
-            f"\trepo.ignore_whitespace_conflicts = {repo.ignore_whitespace_conflicts!r}"
-        )
+        print(f"\trepo.ignore_whitespace_conflicts = {repo.ignore_whitespace_conflicts!r}")
 
         assert hasattr(repo, "internal")
         assert type(repo.internal) is bool
@@ -556,9 +555,7 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
 
         assert hasattr(star, "ignore_whitespace_conflicts")
         assert type(star.ignore_whitespace_conflicts) is bool
-        print(
-            f"\tstar.ignore_whitespace_conflicts = {star.ignore_whitespace_conflicts!r}"
-        )
+        print(f"\tstar.ignore_whitespace_conflicts = {star.ignore_whitespace_conflicts!r}")
 
         assert hasattr(star, "internal")
         assert type(star.internal) is bool
@@ -793,3 +790,23 @@ with Gitea(GITEA_URL, GITEA_TOKEN, log_level="DEBUG") as gitea:
     assert hasattr(gpg_key, "id")
     assert type(gpg_key.id) is int
     print(f"\tgpg_key.id = {gpg_key.id!r}")
+
+    tasks = Admin.cron_tasks(gitea, page=1, limit=100)
+    for task in tasks:
+        assert hasattr(task, "exec_times")
+        assert type(task.exec_times) is int
+
+        assert hasattr(task, "name")
+        assert type(task.name) is str
+
+        assert hasattr(task, "next")
+        assert type(task.next) is str
+
+        assert hasattr(task, "prev")
+        assert type(task.prev) is str
+
+        assert hasattr(task, "schedule")
+        assert type(task.schedule) is str
+        print(f"\ttask: {task.name!r}")
+
+    print("Done :-)")
