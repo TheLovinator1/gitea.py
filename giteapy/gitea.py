@@ -96,55 +96,52 @@ class Gitea:
         error_400: str = "HTTP 400 Bad Request",
         error_403: str = "HTTP 403 Forbidden",
         error_404: str = "HTTP 404 Not Found",
+        error_405: str = "HTTP 405 Method Not Allowed",
         error_409: str = "HTTP 409 Conflict",
         error_422: str = "HTTP 422 Unprocessable Entity",
     ):
         try:
             self.logger.debug(f"GET {path}")
             response: httpx.Response = self.client.get(self.url + path)
-
-            # Raise HTTPStatusError if the response is not 200
             response.raise_for_status()
 
         except httpx.RequestError as exc:
-            self.logger.error(
-                f"An error occurred while requesting {exc.request.url!r}.",
-                exc_info=True,
-            )
-            return False
+            error_msg = f"An error occurred while requesting {exc.request.url!r}."
+            self.logger.error(error_msg)
 
         except httpx.HTTPStatusError as exc:
-            self.logger.error(
-                f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.",
-                exc_info=True,
-            )
 
             # 400 Bad Request
             if exc.response.status_code == 400:
                 self.logger.error(f"{error_400}")
 
-            if exc.response.status_code == 401:
-                self.logger.error(f"{response}")
-
             # 403 Forbidden
-            if exc.response.status_code == 403:
+            elif exc.response.status_code == 403:
                 self.logger.error(f"{error_403}")
 
             # 404 Not Found
-            if exc.response.status_code == 404:
+            elif exc.response.status_code == 404:
                 self.logger.error(f"{error_404}")
 
+            # 405 Not Found
+            elif exc.response.status_code == 405:
+                self.logger.error(f"{error_405}")
+
             # 409 Conflict
-            if exc.response.status_code == 409:
+            elif exc.response.status_code == 409:
                 self.logger.error(f"{error_409}")
 
             # 422 Unprocessable Entity
-            if exc.response.status_code == 422:
+            elif exc.response.status_code == 422:
                 self.logger.error(f"{error_422}")
 
-            return False
+            else:
+                self.logger.error(f"An error occurred while requesting {exc.request.url!r}.")
 
-        return json.loads(response.text)
+        if response.text:
+            return self.RequestModel(response, json.loads(response.text))
+
+        return self.RequestModel(response, "")
 
     def put_request(self):
         pass

@@ -37,8 +37,15 @@ class Admin(Gitea):
             # TODO: Run test as non-admin user and check that this error is raised.
             raise APIForbiddenError(message=data["message"], url=data["url"])
 
-    def run_cron_task(self, task: str):
+    def run_cron_task(self, task: str) -> bool:
         raise NotImplementedError
+        path = f"/admin/cron/{task}"
+
+        error_404 = "Failed to run cron task."
+        request = self.post_request(path, error_404=error_404)
+
+        if request.response.status_code == 204:
+            return True
 
     def list_all_organizations(self, page: int, limit: int):
         raise NotImplementedError
